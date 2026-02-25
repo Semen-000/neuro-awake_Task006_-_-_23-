@@ -95,11 +95,13 @@ git diff
 git diff main.py
 ```
 📋 Инструкция по выполнению:
+
 1️⃣ Создайте репозиторий:
 ```bash
 git clone https://github.com/neuro-awake/neuro-awake_Task006_Фамилия3_Имя_группа.git
 cd neuro-awake_Task006_Фамилия3_Имя_группа
 ```
+
 2️⃣ Добавьте файлы:
 
 • ```main.py``` - код выше
@@ -107,6 +109,7 @@ cd neuro-awake_Task006_Фамилия3_Имя_группа
 • ```README.md``` - с вашими данными
 
 • Папка ```screenshots/``` со скриншотами
+
 3️⃣ Коммиты:
 ```bash
 # Первый коммит
