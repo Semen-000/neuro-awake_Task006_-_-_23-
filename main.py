@@ -36,18 +36,18 @@ class OperatorApp:
                                'birth_date', 'birth_time', 'software_start_time', 'days_duration'])
     
     def add_header(self, parent):
-        """Добавляет заголовок и подзаголовок в окно"""
-        header_frame = tk.Frame(parent, bg='#f0f0f0')
-        header_frame.pack(fill=tk.X, pady=(10, 5))
+        """Добавляет заголовок и подзаголовок в окно на зеленом фоне"""
+        header_frame = tk.Frame(parent, bg="#20B427")
+        header_frame.pack(fill=tk.X, pady=0)
         
         tk.Label(header_frame, text="Нейрободр", 
-                font=('Arial', 24, 'bold'), bg='#f0f0f0', fg='#2c3e50').pack()
+                font=('Arial', 26, 'bold'), bg='#20B427', fg='white').pack(pady=(15, 0))
         
         tk.Label(header_frame, text="Программа для мониторинга состояния водителей", 
-                font=('Arial', 10), bg='#f0f0f0', fg='#34495e').pack()
+                font=('Arial', 11), bg='#20B427', fg='white').pack(pady=(0, 15))
         
         # Тонкая линия-разделитель
-        tk.Frame(parent, bg='#bdc3c7', height=1).pack(fill=tk.X, pady=5)
+        tk.Frame(parent, bg='#bdc3c7', height=1).pack(fill=tk.X, pady=0)
     
     def show_start_window(self):
         """Окно №1 - Стартовая форма"""
@@ -62,11 +62,11 @@ class OperatorApp:
         btn_frame.pack(expand=True)
         
         tk.Button(btn_frame, text="РЕГИСТРАЦИЯ", command=self.show_registration_form,
-                 font=('Arial', 14, 'bold'), bg='#3498db', fg='white',
+                 font=('Arial', 14, 'bold'), bg='#005BBB', fg='white',
                  width=20, height=2, bd=0, cursor='hand2', relief=tk.FLAT).pack(pady=10)
         
         tk.Button(btn_frame, text="АВТОРИЗАЦИЯ", command=self.show_auth_form,
-                 font=('Arial', 14, 'bold'), bg='#2ecc71', fg='white',
+                 font=('Arial', 14, 'bold'), bg='#00A36C', fg='white',
                  width=20, height=2, bd=0, cursor='hand2', relief=tk.FLAT).pack(pady=10)
     
     def show_registration_form(self):
@@ -86,8 +86,8 @@ class OperatorApp:
         self.col1.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=5)
         
         # Заголовок колонки
-        tk.Label(self.col1, text="Информация оператора", 
-                font=('Arial', 14, 'bold'), bg='#3498db', fg='white',
+        tk.Label(self.col1, text="Регистрация оператора", 
+                font=('Arial', 14, 'bold'), bg='#005BBB', fg='white',
                 height=2).pack(fill=tk.X)
         
         # Содержимое колонки 1
@@ -100,7 +100,7 @@ class OperatorApp:
         
         # Заголовок колонки
         tk.Label(self.col2, text="Идентификация", 
-                font=('Arial', 14, 'bold'), bg='#e67e22', fg='white',
+                font=('Arial', 14, 'bold'), bg='#FF6B00', fg='white',
                 height=2).pack(fill=tk.X)
         
         # Содержимое колонки 2
@@ -113,7 +113,7 @@ class OperatorApp:
         
         # Заголовок колонки
         tk.Label(self.col3, text="Информационный блок", 
-                font=('Arial', 14, 'bold'), bg='#27ae60', fg='white',
+                font=('Arial', 14, 'bold'), bg='#00A36C', fg='white',
                 height=2).pack(fill=tk.X)
         
         # Содержимое колонки 3
@@ -156,7 +156,7 @@ class OperatorApp:
             self.reg_entries[field_name] = entry
         
         tk.Button(self.content1, text="Записать", command=self.save_operator,
-                 bg='#3498db', fg='white', font=('Arial', 11, 'bold'),
+                 bg='#005BBB', fg='white', font=('Arial', 11, 'bold'),
                  width=15, height=1, bd=0, cursor='hand2', relief=tk.FLAT).pack(pady=20)
     
     def show_identification_content(self):
@@ -176,10 +176,10 @@ class OperatorApp:
         self.photo_label.pack(expand=True, fill=tk.BOTH)
         
         tk.Label(self.content2, text="Требование: 800 x 600 px", 
-                font=('Arial', 9), fg='#e67e22', bg='white').pack(pady=5)
+                font=('Arial', 9), fg='#FF6B00', bg='white').pack(pady=5)
         
         tk.Button(self.content2, text="Загрузить фото", command=self.upload_photo,
-                 bg='#3498db', fg='white', font=('Arial', 10),
+                 bg='#005BBB', fg='white', font=('Arial', 10),
                  width=15, bd=0, cursor='hand2', relief=tk.FLAT).pack(pady=10)
     
     def show_info_content(self, text):
@@ -242,6 +242,17 @@ class OperatorApp:
         }
         
         messagebox.showinfo("Успех", f"Оператор зарегистрирован с ID: {next_id}")
+        # Убрали self.show_start_window() - теперь не перекидывает в начальное окно
+        # Оставляем пользователя в форме регистрации для загрузки фото
+        
+        # Обновляем ID в колонке идентификации
+        for widget in self.content2.winfo_children():
+            if isinstance(widget, tk.Label) and widget.cget('text') == "ID":
+                widget.destroy()
+        
+        # Показываем новый ID
+        tk.Label(self.content2, text=f"ID {next_id}", font=('Arial', 24, 'bold'), 
+                bg='white', fg='#2c3e50').pack(pady=10)
     
     def upload_photo(self):
         """Загрузка фото"""
@@ -271,10 +282,6 @@ class OperatorApp:
                         photo = ImageTk.PhotoImage(img)
                         self.photo_label.config(image=photo, width=200, height=140)
                         self.photo_label.image = photo
-                    else:
-                        # Если photo_label не существует, создаем новый
-                        self.show_authorized_view_with_photo(img)
-                        return
                     
                     # Обновляем информационный блок
                     if hasattr(self, 'content3'):
@@ -327,21 +334,21 @@ class OperatorApp:
         tk.Frame(info_frame, bg='#bdc3c7', height=1).pack(fill=tk.X, pady=10)
         
         # Зеленый блок с ID
-        green_block = tk.Frame(info_frame, bg='#27ae60', padx=10, pady=10)
+        green_block = tk.Frame(info_frame, bg='#00A36C', padx=10, pady=10)
         green_block.pack(fill=tk.X, pady=5)
         
         tk.Label(green_block, text="Оператор определен", 
-                font=('Arial', 11, 'bold'), bg='#27ae60', fg='white').pack()
+                font=('Arial', 11, 'bold'), bg='#00A36C', fg='white').pack()
         
         tk.Label(green_block, text=f"ID {self.operator_data['id']}", 
-                font=('Arial', 11, 'bold'), bg='#27ae60', fg='white').pack()
+                font=('Arial', 11, 'bold'), bg='#00A36C', fg='white').pack()
         
         tk.Label(green_block, text="Для запуска программы нажмите \"Далее\"", 
-                font=('Arial', 9), bg='#27ae60', fg='white').pack(pady=(5, 0))
+                font=('Arial', 9), bg='#00A36C', fg='white').pack(pady=(5, 0))
         
         # Кнопка Далее
         tk.Button(info_frame, text="Далее →", command=self.next_step,
-                 bg='#3498db', fg='white', font=('Arial', 10, 'bold'),
+                 bg='#005BBB', fg='white', font=('Arial', 10, 'bold'),
                  width=12, bd=0, cursor='hand2', relief=tk.FLAT).pack(pady=10, anchor='w')
     
     def show_fail_verification(self):
@@ -356,9 +363,9 @@ class OperatorApp:
         table.pack(pady=10, padx=5, fill=tk.X)
         
         headers = [
-            ("Информация оператора", '#3498db'),
-            ("Идентификация", '#e67e22'),
-            ("Информационный блок", '#27ae60')
+            ("Информация оператора", '#005BBB'),
+            ("Идентификация", '#FF6B00'),
+            ("Информационный блок", '#00A36C')
         ]
         
         for i, (text, color) in enumerate(headers):
@@ -383,7 +390,7 @@ class OperatorApp:
         btn_frame.pack(pady=15)
         
         tk.Button(btn_frame, text="Далее", command=self.retry_identification,
-                 bg='#27ae60', fg='white', font=('Arial', 10, 'bold'),
+                 bg='#00A36C', fg='white', font=('Arial', 10, 'bold'),
                  width=8, bd=0, cursor='hand2', relief=tk.FLAT).pack(side=tk.LEFT, padx=5)
         
         tk.Button(btn_frame, text="Отмена", command=self.show_start_window,
@@ -391,8 +398,9 @@ class OperatorApp:
                  width=8, bd=0, cursor='hand2', relief=tk.FLAT).pack(side=tk.LEFT, padx=5)
     
     def next_step(self):
-        """Следующий шаг"""
-        messagebox.showinfo("Информация", "Запуск программы...")
+        """Следующий шаг - возврат на начальное окно"""
+        messagebox.showinfo("Информация", "Возврат в главное меню")
+        self.show_start_window()  # Возвращаемся на начальное окно
     
     def retry_identification(self):
         """Повтор идентификации"""
@@ -427,7 +435,7 @@ class OperatorApp:
                 bg='white', fg="#000000").pack(pady=10)
         
         tk.Button(auth_frame, text="АВТОРИЗАЦИЯ", command=self.check_auth,
-                 font=('Arial', 14, 'bold'), bg='#2ecc71', fg='white',
+                 font=('Arial', 14, 'bold'), bg='#00A36C', fg='white',
                  width=15, height=1, bd=0, cursor='hand2', relief=tk.FLAT).pack(pady=20)
         
         # Кнопка назад
@@ -480,7 +488,7 @@ class OperatorApp:
         col1.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=5)
         
         tk.Label(col1, text="Информация оператора", 
-                font=('Arial', 14, 'bold'), bg='#3498db', fg='white',
+                font=('Arial', 14, 'bold'), bg='#005BBB', fg='white',
                 height=2).pack(fill=tk.X)
         
         content1 = tk.Frame(col1, bg='white', padx=20, pady=20)
@@ -500,7 +508,7 @@ class OperatorApp:
         col2.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=5)
         
         tk.Label(col2, text="Идентификация", 
-                font=('Arial', 14, 'bold'), bg='#e67e22', fg='white',
+                font=('Arial', 14, 'bold'), bg='#FF6B00', fg='white',
                 height=2).pack(fill=tk.X)
         
         content2 = tk.Frame(col2, bg='white', padx=20, pady=20)
@@ -508,11 +516,11 @@ class OperatorApp:
         
         # ID
         tk.Label(content2, text=f"ID {self.operator_data['id']}", 
-                font=('Arial', 16, 'bold'), bg='white', fg='#e67e22').pack(pady=10)
+                font=('Arial', 16, 'bold'), bg='white', fg='#FF6B00').pack(pady=10)
         
         # Кнопка загрузки фото
         tk.Button(content2, text="Загрузить фото", command=self.upload_photo,
-                 bg='#3498db', fg='white', font=('Arial', 10),
+                 bg='#005BBB', fg='white', font=('Arial', 10),
                  width=15, bd=0, cursor='hand2', relief=tk.FLAT).pack(pady=5)
         
         # Рамка для фото
@@ -546,7 +554,7 @@ class OperatorApp:
         col3.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=5)
         
         tk.Label(col3, text="Информационный блок", 
-                font=('Arial', 14, 'bold'), bg='#27ae60', fg='white',
+                font=('Arial', 14, 'bold'), bg='#00A36C', fg='white',
                 height=2).pack(fill=tk.X)
         
         self.content3 = tk.Frame(col3, bg='white', padx=20, pady=20)
@@ -569,7 +577,7 @@ class OperatorApp:
         
         # Статус
         tk.Label(self.content3, text="Оператор определен", 
-                font=('Arial', 12, 'bold'), bg='white', fg='#27ae60').pack(anchor='w', pady=2)
+                font=('Arial', 12, 'bold'), bg='white', fg='#00A36C').pack(anchor='w', pady=2)
         
         tk.Label(self.content3, text=f"ID {self.operator_data['id']}", 
                 font=('Arial', 12, 'bold'), bg='white', fg='#2c3e50').pack(anchor='w', pady=2)
@@ -579,7 +587,7 @@ class OperatorApp:
         
         # Кнопка Далее
         tk.Button(self.content3, text="Далее →", command=self.next_step,
-                 bg='#3498db', fg='white', font=('Arial', 10, 'bold'),
+                 bg='#005BBB', fg='white', font=('Arial', 10, 'bold'),
                  width=12, bd=0, cursor='hand2', relief=tk.FLAT).pack(anchor='w')
         
         # Кнопка назад
